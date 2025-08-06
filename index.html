@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bapper Hat Generator</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    .header {
+      background: linear-gradient(135deg, #ff6b6b, #feca57);
+      padding: 30px;
+      text-align: center;
+      color: white;
+    }
+
+    .header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.9;
+    }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 30px;
+      padding: 30px;
+    }
+
+    .controls-panel {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      height: fit-content;
+    }
+
+    .feature-section {
+      margin-bottom: 30px;
+      padding-bottom: 25px;
+      border-bottom: 2px solid #e9ecef;
+    }
+
+    .feature-section:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+    }
+
+    .feature-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #2c3e50;
+      margin-bottom: 15px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .feature-icon {
+      width: 24px;
+      height: 24px;
+      background: #667eea;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+    }
+
+    .upload-area {
+      border: 3px dashed #667eea;
+      border-radius: 10px;
+      padding: 30px;
+      text-align: center;
+      background: #f8f9ff;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .upload-area:hover {
+      border-color: #5a67d8;
+      background: #f0f4ff;
+    }
+
+    .upload-area.dragover {
+      border-color: #4c51bf;
+      background: #e6fffa;
+    }
+
+    .upload-input {
+      display: none;
+    }
+
+    .upload-text {
+      color: #667eea;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .upload-hint {
+      color: #718096;
+      font-size: 0.9rem;
+    }
+
+    .hat-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .hat-option {
+      border: 3px solid transparent;
+      border-radius: 10px;
+      padding: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+      text-align: center;
+    }
+
+    .hat-option:hover {
+      border-color: #667eea;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+
+    .hat-option.selected {
+      border-color: #667eea;
+      background: #f0f4ff;
+    }
+
+    .hat-preview {
+      width: 60px;
+      height: 60px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 8px;
+    }
+
+    .hat-name {
+      font-size: 0.8rem;
+      color: #4a5568;
+      font-weight: 500;
+    }
+
+    .controls-info {
+      background: #e6fffa;
+      border-radius: 10px;
+      padding: 20px;
+      margin-top: 15px;
+    }
+
+    .controls-info h4 {
+      color: #2d3748;
+      margin-bottom: 10px;
+    }
+
+    .controls-info ul {
+      list-style: none;
+      color: #4a5568;
+    }
+
+    .controls-info li {
+      margin-bottom: 5px;
+      padding-left: 20px;
+      position: relative;
+    }
+
+    .controls-info li:before {
+      content: "•";
+      color: #667eea;
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+    }
+
+    .canvas-area {
+      background: #f8f9fa;
+      border-radius: 15px;
+      padding: 25px;
+      text-align: center;
+    }
+
+    .canvas-container {
+      background: white;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      margin-bottom: 20px;
+    }
+
+    #canvas {
+      border: 2px solid #e2e8f0;
+      border-radius: 8px;
+      max-width: 100%;
+      height: auto;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 1.1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .download-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        grid-template-columns: 1fr;
+      }
+      
+      .hat-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .header h1 {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1> ₿appers PFP Generator</h1>
+      <p>Create amazing pfp combinations with your photos!</p>
+    </div>
+
+    <div class="main-content">
+      <div class="controls-panel">
+        <!-- Feature 1: Upload Image -->
+        <div class="feature-section">
+          <div class="feature-title">
+            <div class="feature-icon">1</div>
+            Upload Any Image
+          </div>
+          <div class="upload-area" onclick="document.getElementById('upload').click()" role="button" aria-label="Upload image area" tabindex="0">
+            <input type="file" id="upload" class="upload-input" accept="image/*" aria-label="Upload image" />
+            <div class="upload-text">📸 Click to upload your image</div>
+            <div class="upload-hint">or drag and drop here</div>
+          </div>
+        </div>
+
+        <!-- Feature 2: Choose Hat -->
+        <div class="feature-section">
+          <div class="feature-title">
+            <div class="feature-icon">2</div>
+            Choose from 8 Hats
+          </div>
+          <div class="hat-grid">
+            <div class="hat-option" data-hat="hat1.png" role="button" aria-label="Select Orange Hat" tabindex="0">
+              <img src="hat1.png" alt="Orange Hat" class="hat-preview">
+              <div class="hat-name">Orange</div>
+            </div>
+            <div class="hat-option" data-hat="hat2.png" role="button" aria-label="Select Black & Red Hat" tabindex="0">
+              <img src="hat2.png" alt="Black & Red Hat" class="hat-preview">
+              <div class="hat-name">Black & Red</div>
+            </div>
+            <div class="hat-option" data-hat="hat3.png" role="button" aria-label="Select Green & Yellow Hat" tabindex="0">
+              <img src="hat3.png" alt="Green & Yellow Hat" class="hat-preview">
+              <div class="hat-name">Green & Yellow</div>
+            </div>
+            <div class="hat-option" data-hat="hat4.png" role="button" aria-label="Select Blue & White Hat" tabindex="0">
+              <img src="hat4.png" alt="Blue & White Hat" class="hat-preview">
+              <div class="hat-name">Blue & White</div>
+            </div>
+            <div class="hat-option" data-hat="hat5.png" role="button" aria-label="Select Red & Gray Hat" tabindex="0">
+              <img src="hat5.png" alt="Red & Gray Hat" class="hat-preview">
+              <div class="hat-name">Red & Gray</div>
+            </div>
+            <div class="hat-option" data-hat="hat6.png" role="button" aria-label="Select Pink & White Hat" tabindex="0">
+              <img src="hat6.png" alt="Pink & White Hat" class="hat-preview">
+              <div class="hat-name">Pink & White</div>
+            </div>
+            <div class="hat-option" data-hat="hat7.png" role="button" aria-label="Select Purple Hat" tabindex="0">
+              <img src="hat7.png" alt="Purple Hat" class="hat-preview">
+              <div class="hat-name">Purple</div>
+            </div>
+            <div class="hat-option" data-hat="hat8.png" role="button" aria-label="Select Beige & Green Hat" tabindex="0">
+              <img src="hat8.png" alt="Beige & Green Hat" class="hat-preview">
+              <div class="hat-name">Beige & Green</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Feature 3: Controls Info -->
+        <div class="feature-section">
+          <div class="feature-title">
+            <div class="feature-icon">3</div>
+            Drag / Resize / Rotate
+          </div>
+          <div class="controls-info">
+            <h4>Hat Controls:</h4>
+            <ul>
+              <li>Drag to move position</li>
+              <li>Drag corners to resize</li>
+              <li>Use rotation handle to rotate</li>
+              <li>Double-click to select/deselect</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="canvas-area">
+        <div class="canvas-container">
+          <canvas id="canvas" width="600" height="450"></canvas>
+        </div>
+        
+        <!-- Feature 4: Download -->
+        <div class="feature-section">
+          <div class="feature-title">
+            <div class="feature-icon">4</div>
+            Download Final Image
+          </div>
+          <button class="download-btn" onclick="downloadImage()" id="downloadBtn" disabled aria-label="Download your creation">
+            📥 Download Your Creation
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.6.0/fabric.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof fabric === 'undefined') {
+        alert('Fabric.js failed to load. Please check your internet connection or CDN access.');
+        console.error('Fabric.js is not defined.');
+        return;
+      }
+      const canvas = new fabric.Canvas('canvas', {
+        backgroundColor: '#f8f9fa'
+      });
+      let hatImage = null;
+      let backgroundImage = null;
+
+      // Upload user image with drag and drop
+      const uploadArea = document.querySelector('.upload-area');
+      const uploadInput = document.getElementById('upload');
+
+      uploadArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        uploadArea.classList.add('dragover');
+      });
+
+      uploadArea.addEventListener('dragleave', () => {
+        uploadArea.classList.remove('dragover');
+      });
+
+      uploadArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove('dragover');
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleImageUpload(files[0]);
+        }
+      });
+
+      uploadInput.addEventListener('change', function (e) {
+        if (e.target.files.length > 0) {
+          handleImageUpload(e.target.files[0]);
+        }
+      });
+
+      function handleImageUpload(file) {
+        console.log('handleImageUpload called with file:', file);
+        const reader = new FileReader();
+        reader.onload = function (f) {
+          console.log('FileReader loaded:', f.target.result.slice(0, 100));
+          fabric.Image.fromURL(f.target.result, function (img) {
+            if (!img) {
+              alert('Image failed to load. The file may be corrupt or in an unsupported format.');
+              console.error('fabric.Image.fromURL failed to create image.');
+              return;
+            }
+            // Clear canvas
+            canvas.clear();
+            canvas.backgroundColor = '#f8f9fa';
+            // Scale image to fit canvas
+            const canvasWidth = canvas.getWidth();
+            const canvasHeight = canvas.getHeight();
+            const imgWidth = img.width;
+            const imgHeight = img.height;
+            console.log('Image loaded. Width:', imgWidth, 'Height:', imgHeight);
+            const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
+            img.scale(scale);
+            // Center the image
+            img.set({
+              left: (canvasWidth - img.getScaledWidth()) / 2,
+              top: (canvasHeight - img.getScaledHeight()) / 2,
+              selectable: false,
+              evented: false
+            });
+            backgroundImage = img;
+            canvas.add(img);
+            canvas.sendToBack(img);
+            canvas.renderAll();
+            // Debug: log canvas objects
+            console.log('Canvas objects after upload:', canvas.getObjects());
+            // Enable download button
+            document.getElementById('downloadBtn').disabled = false;
+            // Update only the text, not the whole upload area
+            const uploadText = uploadArea.querySelector('.upload-text');
+            const uploadHint = uploadArea.querySelector('.upload-hint');
+            if (uploadText) uploadText.textContent = '✅ Image uploaded successfully!';
+            if (uploadHint) uploadHint.textContent = 'Click to upload a different image';
+            console.log('Image added to canvas and rendered.');
+          }, {
+            crossOrigin: 'anonymous'
+          });
+        };
+        reader.onerror = function() {
+          alert('Failed to read the image file. Please try another image.');
+          console.error('FileReader error:', reader.error);
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // Hat selection
+      document.querySelectorAll('.hat-option').forEach(option => {
+        option.addEventListener('click', function() {
+          // Remove previous selection
+          document.querySelectorAll('.hat-option').forEach(opt => opt.classList.remove('selected'));
+          // Add selection to current
+          this.classList.add('selected');
+          
+          const hatPath = this.dataset.hat;
+          loadHat(hatPath);
+        });
+      });
+
+      function loadHat(hatPath) {
+        fabric.Image.fromURL(hatPath, function (img) {
+          // Remove previous hat
+          if (hatImage) {
+            canvas.remove(hatImage);
+          }
+          // Configure hat
+          img.set({
+            left: canvas.getWidth() / 2 - 50,
+            top: 50,
+            hasRotatingPoint: true,
+            cornerColor: '#667eea',
+            cornerSize: 12,
+            transparentCorners: false,
+            borderColor: '#667eea',
+            borderScaleFactor: 2
+          });
+          // Scale hat to reasonable size
+          img.scale(0.3);
+          hatImage = img;
+          canvas.add(hatImage);
+          canvas.setActiveObject(hatImage);
+          canvas.renderAll();
+          // Add touch support for mobile
+          addTouchSupport(hatImage);
+        }, {
+          crossOrigin: 'anonymous'
+        });
+      }
+
+      // Add touch support for hat manipulation
+      function addTouchSupport(obj) {
+        // Only add if on a touch device
+        if ('ontouchstart' in window) {
+          let lastX = 0, lastY = 0, isDragging = false;
+          obj.on('touch:drag', function(opt) {
+            isDragging = true;
+            const evt = opt.e.touches[0];
+            const pointer = canvas.getPointer(evt);
+            obj.left = pointer.x - obj.width * obj.scaleX / 2;
+            obj.top = pointer.y - obj.height * obj.scaleY / 2;
+            canvas.renderAll();
+          });
+          obj.on('touch:gesture', function(opt) {
+            if (opt.e.touches.length === 2) {
+              // Pinch to scale
+              const scale = opt.self.scale;
+              obj.scale(scale);
+              canvas.renderAll();
+            }
+          });
+        }
+      }
+
+      // Download function
+      window.downloadImage = function() {
+        if (!backgroundImage) {
+          alert('Please upload an image first!');
+          return;
+        }
+        // Deselect all objects for clean download
+        canvas.discardActiveObject();
+        canvas.renderAll();
+        try {
+          const link = document.createElement('a');
+          link.download = 'bapper_hat_creation.png';
+          link.href = canvas.toDataURL({ 
+            format: 'png',
+            quality: 1,
+            multiplier: 2 // Higher resolution
+          });
+          link.click();
+        } catch (e) {
+          alert('Failed to generate image. Try again.');
+        }
+      }
+
+      // Initialize canvas
+      canvas.on('selection:created', function() {
+        canvas.renderAll();
+      });
+
+      canvas.on('selection:cleared', function() {
+        canvas.renderAll();
+      });
+    });
+  </script>
+</body>
+</html>
+
