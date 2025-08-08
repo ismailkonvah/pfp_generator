@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
   <title>Bapper Hat Generator</title>
   <style>
     * {
@@ -15,7 +15,13 @@
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 20px;
+      padding: 10px;
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      -khtml-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
     }
 
     .container {
@@ -29,7 +35,7 @@
 
     .header {
       background: linear-gradient(135deg, #ff6b6b, #feca57);
-      padding: 30px;
+      padding: 20px;
       text-align: center;
       color: white;
     }
@@ -100,11 +106,17 @@
       background: #f8f9ff;
       transition: all 0.3s ease;
       cursor: pointer;
+      min-height: 120px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
 
-    .upload-area:hover {
+    .upload-area:hover, .upload-area:focus {
       border-color: #5a67d8;
       background: #f0f4ff;
+      outline: none;
     }
 
     .upload-area.dragover {
@@ -120,6 +132,7 @@
       color: #667eea;
       font-weight: 500;
       margin-bottom: 10px;
+      font-size: 1rem;
     }
 
     .upload-hint {
@@ -142,12 +155,23 @@
       transition: all 0.3s ease;
       background: white;
       text-align: center;
+      min-height: 100px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      touch-action: manipulation;
     }
 
-    .hat-option:hover {
+    .hat-option:hover, .hat-option:focus {
       border-color: #667eea;
       transform: translateY(-2px);
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+      outline: none;
+    }
+
+    .hat-option:active {
+      transform: translateY(0);
     }
 
     .hat-option.selected {
@@ -213,6 +237,7 @@
       padding: 20px;
       box-shadow: 0 5px 15px rgba(0,0,0,0.1);
       margin-bottom: 20px;
+      overflow: hidden;
     }
 
     #canvas {
@@ -220,6 +245,7 @@
       border-radius: 8px;
       max-width: 100%;
       height: auto;
+      touch-action: none;
     }
 
     .download-btn {
@@ -233,11 +259,18 @@
       cursor: pointer;
       transition: all 0.3s ease;
       box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      min-height: 50px;
+      touch-action: manipulation;
     }
 
-    .download-btn:hover {
+    .download-btn:hover, .download-btn:focus {
       transform: translateY(-2px);
       box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+      outline: none;
+    }
+
+    .download-btn:active {
+      transform: translateY(0);
     }
 
     .download-btn:disabled {
@@ -246,17 +279,219 @@
       transform: none;
     }
 
+    /* Enhanced Mobile Responsiveness */
     @media (max-width: 768px) {
+      body {
+        padding: 5px;
+      }
+
+      .container {
+        border-radius: 15px;
+      }
+
+      .header {
+        padding: 15px;
+      }
+
+      .header h1 {
+        font-size: 1.8rem;
+        margin-bottom: 8px;
+      }
+
+      .header p {
+        font-size: 1rem;
+      }
+
       .main-content {
         grid-template-columns: 1fr;
+        gap: 20px;
+        padding: 20px;
       }
-      
+
+      .controls-panel {
+        padding: 20px;
+      }
+
+      .feature-section {
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+      }
+
+      .feature-title {
+        font-size: 1.2rem;
+        margin-bottom: 12px;
+      }
+
+      .upload-area {
+        padding: 20px;
+        min-height: 100px;
+      }
+
+      .upload-text {
+        font-size: 0.9rem;
+      }
+
+      .upload-hint {
+        font-size: 0.8rem;
+      }
+
       .hat-grid {
         grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
       }
-      
+
+      .hat-option {
+        padding: 8px;
+        min-height: 90px;
+      }
+
+      .hat-preview {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 6px;
+      }
+
+      .hat-name {
+        font-size: 0.75rem;
+      }
+
+      .controls-info {
+        padding: 15px;
+      }
+
+      .controls-info h4 {
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+      }
+
+      .controls-info li {
+        font-size: 0.8rem;
+        margin-bottom: 4px;
+      }
+
+      .canvas-area {
+        padding: 15px;
+      }
+
+      .canvas-container {
+        padding: 15px;
+      }
+
+      #canvas {
+        width: 100%;
+        max-width: 100%;
+      }
+
+      .download-btn {
+        padding: 12px 25px;
+        font-size: 1rem;
+        width: 100%;
+        max-width: 300px;
+      }
+    }
+
+    @media (max-width: 480px) {
       .header h1 {
-        font-size: 2rem;
+        font-size: 1.5rem;
+      }
+
+      .header p {
+        font-size: 0.9rem;
+      }
+
+      .main-content {
+        padding: 15px;
+        gap: 15px;
+      }
+
+      .controls-panel {
+        padding: 15px;
+      }
+
+      .feature-title {
+        font-size: 1.1rem;
+      }
+
+      .feature-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+      }
+
+      .upload-area {
+        padding: 15px;
+        min-height: 80px;
+      }
+
+      .hat-grid {
+        gap: 10px;
+      }
+
+      .hat-option {
+        padding: 6px;
+        min-height: 80px;
+      }
+
+      .hat-preview {
+        width: 40px;
+        height: 40px;
+      }
+
+      .hat-name {
+        font-size: 0.7rem;
+      }
+
+      .canvas-area {
+        padding: 10px;
+      }
+
+      .canvas-container {
+        padding: 10px;
+      }
+
+      .download-btn {
+        padding: 10px 20px;
+        font-size: 0.9rem;
+      }
+    }
+
+    /* Touch-friendly improvements */
+    @media (hover: none) and (pointer: coarse) {
+      .hat-option:hover {
+        transform: none;
+        box-shadow: none;
+      }
+
+      .download-btn:hover {
+        transform: none;
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+      }
+
+      .upload-area:hover {
+        border-color: #667eea;
+        background: #f8f9ff;
+      }
+    }
+
+    /* Landscape orientation on mobile */
+    @media (max-width: 768px) and (orientation: landscape) {
+      .main-content {
+        grid-template-columns: 1fr 1.5fr;
+        gap: 15px;
+      }
+
+      .hat-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+
+      .hat-option {
+        min-height: 70px;
+      }
+
+      .hat-preview {
+        width: 35px;
+        height: 35px;
       }
     }
   </style>
@@ -362,7 +597,7 @@
     </div>
   </div>
 
-  <script src="fabric.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.3.0/fabric.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
       console.log('DOM loaded, checking Fabric.js...');
@@ -376,16 +611,69 @@
       console.log('Fabric.js loaded successfully, version:', fabric.version);
       
       const canvas = new fabric.Canvas('canvas', {
-        backgroundColor: '#f8f9fa'
+        backgroundColor: '#f8f9fa',
+        enableRetinaScaling: true,
+        allowTouchScrolling: false
       });
+      
+      // Enhanced mobile touch support
+      if ('ontouchstart' in window) {
+        canvas.on('touch:gesture', function(e) {
+          e.e.preventDefault();
+          e.e.stopPropagation();
+        });
+        
+        canvas.on('touch:drag', function(e) {
+          e.e.preventDefault();
+          e.e.stopPropagation();
+        });
+      }
       
       console.log('Canvas initialized successfully');
       let hatImage = null;
       let backgroundImage = null;
 
+      // Responsive canvas sizing
+      function resizeCanvas() {
+        const container = document.querySelector('.canvas-container');
+        const containerWidth = container.clientWidth - 40; // Account for padding
+        const aspectRatio = 450 / 600; // Original height/width ratio
+        
+        let newWidth = Math.min(containerWidth, 600);
+        let newHeight = newWidth * aspectRatio;
+        
+        // Ensure minimum size for mobile
+        if (window.innerWidth <= 480) {
+          newWidth = Math.max(newWidth, 280);
+          newHeight = newWidth * aspectRatio;
+        }
+        
+        canvas.setDimensions({
+          width: newWidth,
+          height: newHeight
+        });
+        
+        canvas.renderAll();
+      }
+      
+      // Initial resize and window resize listener
+      resizeCanvas();
+      window.addEventListener('resize', resizeCanvas);
+      window.addEventListener('orientationchange', function() {
+        setTimeout(resizeCanvas, 100);
+      });
+
       // Upload user image with drag and drop
       const uploadArea = document.querySelector('.upload-area');
       const uploadInput = document.getElementById('upload');
+
+      // Enhanced keyboard support for upload area
+      uploadArea.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          uploadInput.click();
+        }
+      });
 
       uploadArea.addEventListener('dragover', (e) => {
         e.preventDefault();
@@ -512,18 +800,29 @@
         reader.readAsDataURL(file);
       }
 
-      // Hat selection
+      // Enhanced hat selection with keyboard support
       document.querySelectorAll('.hat-option').forEach(option => {
         option.addEventListener('click', function() {
-          // Remove previous selection
-          document.querySelectorAll('.hat-option').forEach(opt => opt.classList.remove('selected'));
-          // Add selection to current
-          this.classList.add('selected');
-          
-          const hatPath = this.dataset.hat;
-          loadHat(hatPath);
+          selectHat(this);
+        });
+        
+        option.addEventListener('keydown', function(e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            selectHat(this);
+          }
         });
       });
+
+      function selectHat(element) {
+        // Remove previous selection
+        document.querySelectorAll('.hat-option').forEach(opt => opt.classList.remove('selected'));
+        // Add selection to current
+        element.classList.add('selected');
+        
+        const hatPath = element.dataset.hat;
+        loadHat(hatPath);
+      }
 
       function loadHat(hatPath) {
         console.log('Loading hat:', hatPath);
@@ -542,89 +841,112 @@
             canvas.remove(hatImage);
           }
           
-          // Configure hat
+          // Configure hat with enhanced mobile support
+          const canvasWidth = canvas.getWidth();
+          const canvasHeight = canvas.getHeight();
+          
+          // Scale hat appropriately for canvas size
+          const hatScale = Math.min(canvasWidth / 600, canvasHeight / 450) * 0.3;
+          
           img.set({
-            left: canvas.getWidth() / 2 - 50,
-            top: 50,
+            left: canvasWidth / 2 - (img.width * hatScale) / 2,
+            top: canvasHeight * 0.15,
             hasRotatingPoint: true,
             cornerColor: '#667eea',
-            cornerSize: 12,
+            cornerSize: window.innerWidth <= 768 ? 16 : 12, // Larger corners on mobile
             transparentCorners: false,
             borderColor: '#667eea',
-            borderScaleFactor: 2
+            borderScaleFactor: 2,
+            scaleX: hatScale,
+            scaleY: hatScale,
+            minScaleLimit: 0.1,
+            maxScaleLimit: 2,
+            // Enhanced touch support
+            touchCornerSize: window.innerWidth <= 768 ? 24 : 16,
+            selectionLineWidth: window.innerWidth <= 768 ? 3 : 2
           });
           
-          // Scale hat to reasonable size
-          img.scale(0.3);
           hatImage = img;
-          canvas.add(hatImage);
-          canvas.setActiveObject(hatImage);
+          canvas.add(img);
+          canvas.setActiveObject(img);
           canvas.renderAll();
           
           console.log('Hat added to canvas successfully');
-          
-          // Add touch support for mobile
-          addTouchSupport(hatImage);
         }, {
           crossOrigin: 'anonymous'
         });
       }
 
-      // Add touch support for hat manipulation
-      function addTouchSupport(obj) {
-        // Only add if on a touch device
-        if ('ontouchstart' in window) {
-          let lastX = 0, lastY = 0, isDragging = false;
-          obj.on('touch:drag', function(opt) {
-            isDragging = true;
-            const evt = opt.e.touches[0];
-            const pointer = canvas.getPointer(evt);
-            obj.left = pointer.x - obj.width * obj.scaleX / 2;
-            obj.top = pointer.y - obj.height * obj.scaleY / 2;
-            canvas.renderAll();
-          });
-          obj.on('touch:gesture', function(opt) {
-            if (opt.e.touches.length === 2) {
-              // Pinch to scale
-              const scale = opt.self.scale;
-              obj.scale(scale);
-              canvas.renderAll();
-            }
-          });
-        }
-      }
-
-      // Download function
+      // Enhanced download function
       window.downloadImage = function() {
         if (!backgroundImage) {
           alert('Please upload an image first!');
           return;
         }
-        // Deselect all objects for clean download
-        canvas.discardActiveObject();
-        canvas.renderAll();
+        
         try {
+          // Deselect all objects before export
+          canvas.discardActiveObject();
+          canvas.renderAll();
+          
+          // Create download link
           const link = document.createElement('a');
-          link.download = 'bapper_hat_creation.png';
-          link.href = canvas.toDataURL({ 
-            format: 'png',
-            quality: 1,
-            multiplier: 2 // Higher resolution
-          });
+          link.download = 'bapper-pfp-' + Date.now() + '.png';
+          link.href = canvas.toDataURL('image/png', 1.0);
+          
+          // Trigger download
+          document.body.appendChild(link);
           link.click();
-        } catch (e) {
-          alert('Failed to generate image. Try again.');
+          document.body.removeChild(link);
+          
+          console.log('Image downloaded successfully');
+        } catch (error) {
+          console.error('Download failed:', error);
+          alert('Failed to download image. Please try again.');
         }
-      }
+      };
 
-      // Initialize canvas
-      canvas.on('selection:created', function() {
+      // Enhanced keyboard navigation
+      document.addEventListener('keydown', function(e) {
+        if (e.target.tagName === 'INPUT') return;
+        
+        const activeObject = canvas.getActiveObject();
+        if (!activeObject) return;
+        
+        const step = e.shiftKey ? 10 : 1;
+        
+        switch(e.key) {
+          case 'ArrowLeft':
+            e.preventDefault();
+            activeObject.set('left', activeObject.left - step);
+            break;
+          case 'ArrowRight':
+            e.preventDefault();
+            activeObject.set('left', activeObject.left + step);
+            break;
+          case 'ArrowUp':
+            e.preventDefault();
+            activeObject.set('top', activeObject.top - step);
+            break;
+          case 'ArrowDown':
+            e.preventDefault();
+            activeObject.set('top', activeObject.top + step);
+            break;
+          case 'Delete':
+          case 'Backspace':
+            e.preventDefault();
+            if (activeObject === hatImage) {
+              canvas.remove(hatImage);
+              hatImage = null;
+              document.querySelectorAll('.hat-option').forEach(opt => opt.classList.remove('selected'));
+            }
+            break;
+        }
+        
         canvas.renderAll();
       });
 
-      canvas.on('selection:cleared', function() {
-        canvas.renderAll();
-      });
+      console.log('Bapper Hat Generator initialized successfully with enhanced mobile support');
     });
   </script>
 </body>
