@@ -362,17 +362,24 @@
     </div>
   </div>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/4.6.0/fabric.min.js"></script>
+  <script src="fabric.min.js"></script>
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM loaded, checking Fabric.js...');
+      
       if (typeof fabric === 'undefined') {
         alert('Fabric.js failed to load. Please check your internet connection or CDN access.');
         console.error('Fabric.js is not defined.');
         return;
       }
+      
+      console.log('Fabric.js loaded successfully, version:', fabric.version);
+      
       const canvas = new fabric.Canvas('canvas', {
         backgroundColor: '#f8f9fa'
       });
+      
+      console.log('Canvas initialized successfully');
       let hatImage = null;
       let backgroundImage = null;
 
@@ -406,55 +413,102 @@
 
       function handleImageUpload(file) {
         console.log('handleImageUpload called with file:', file);
+        console.log('File type:', file.type);
+        console.log('File size:', file.size);
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+          alert('Please select a valid image file (JPEG, PNG, GIF, etc.)');
+          return;
+        }
+        
+        // Validate file size (max 10MB)
+        if (file.size > 10 * 1024 * 1024) {
+          alert('File size too large. Please select an image smaller than 10MB.');
+          return;
+        }
+        
         const reader = new FileReader();
+        
         reader.onload = function (f) {
-          console.log('FileReader loaded:', f.target.result.slice(0, 100));
-          fabric.Image.fromURL(f.target.result, function (img) {
-            if (!img) {
-              alert('Image failed to load. The file may be corrupt or in an unsupported format.');
-              console.error('fabric.Image.fromURL failed to create image.');
-              return;
-            }
-            // Clear canvas
-            canvas.clear();
-            canvas.backgroundColor = '#f8f9fa';
-            // Scale image to fit canvas
-            const canvasWidth = canvas.getWidth();
-            const canvasHeight = canvas.getHeight();
-            const imgWidth = img.width;
-            const imgHeight = img.height;
-            console.log('Image loaded. Width:', imgWidth, 'Height:', imgHeight);
-            const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
-            img.scale(scale);
-            // Center the image
-            img.set({
-              left: (canvasWidth - img.getScaledWidth()) / 2,
-              top: (canvasHeight - img.getScaledHeight()) / 2,
-              selectable: false,
-              evented: false
+          console.log('FileReader loaded successfully');
+          console.log('Data URL length:', f.target.result.length);
+          
+          // Create a new image to test loading
+          const testImg = new Image();
+          testImg.onload = function() {
+            console.log('Test image loaded successfully. Dimensions:', testImg.width, 'x', testImg.height);
+            
+            fabric.Image.fromURL(f.target.result, function (img) {
+              if (!img) {
+                alert('Failed to create fabric image. Please try a different image.');
+                console.error('fabric.Image.fromURL returned null');
+                return;
+              }
+              
+              console.log('Fabric image created successfully');
+              
+              // Clear canvas
+              canvas.clear();
+              canvas.backgroundColor = '#f8f9fa';
+              
+              // Scale image to fit canvas
+              const canvasWidth = canvas.getWidth();
+              const canvasHeight = canvas.getHeight();
+              const imgWidth = img.width;
+              const imgHeight = img.height;
+              
+              console.log('Canvas dimensions:', canvasWidth, 'x', canvasHeight);
+              console.log('Image dimensions:', imgWidth, 'x', imgHeight);
+              
+              const scale = Math.min(canvasWidth / imgWidth, canvasHeight / imgHeight);
+              console.log('Calculated scale:', scale);
+              
+              img.scale(scale);
+              
+              // Center the image
+              img.set({
+                left: (canvasWidth - img.getScaledWidth()) / 2,
+                top: (canvasHeight - img.getScaledHeight()) / 2,
+                selectable: false,
+                evented: false
+              });
+              
+              backgroundImage = img;
+              canvas.add(img);
+              canvas.sendToBack(img);
+              canvas.renderAll();
+              
+              console.log('Image added to canvas successfully');
+              console.log('Canvas objects after upload:', canvas.getObjects().length);
+              
+              // Enable download button
+              document.getElementById('downloadBtn').disabled = false;
+              
+              // Update upload area text
+              const uploadText = uploadArea.querySelector('.upload-text');
+              const uploadHint = uploadArea.querySelector('.upload-hint');
+              if (uploadText) uploadText.textContent = '✅ Image uploaded successfully!';
+              if (uploadHint) uploadHint.textContent = 'Click to upload a different image';
+              
+            }, {
+              crossOrigin: 'anonymous'
             });
-            backgroundImage = img;
-            canvas.add(img);
-            canvas.sendToBack(img);
-            canvas.renderAll();
-            // Debug: log canvas objects
-            console.log('Canvas objects after upload:', canvas.getObjects());
-            // Enable download button
-            document.getElementById('downloadBtn').disabled = false;
-            // Update only the text, not the whole upload area
-            const uploadText = uploadArea.querySelector('.upload-text');
-            const uploadHint = uploadArea.querySelector('.upload-hint');
-            if (uploadText) uploadText.textContent = '✅ Image uploaded successfully!';
-            if (uploadHint) uploadHint.textContent = 'Click to upload a different image';
-            console.log('Image added to canvas and rendered.');
-          }, {
-            crossOrigin: 'anonymous'
-          });
+          };
+          
+          testImg.onerror = function() {
+            alert('Failed to load the image. The file may be corrupt or in an unsupported format.');
+            console.error('Test image failed to load');
+          };
+          
+          testImg.src = f.target.result;
         };
+        
         reader.onerror = function() {
           alert('Failed to read the image file. Please try another image.');
           console.error('FileReader error:', reader.error);
         };
+        
         reader.readAsDataURL(file);
       }
 
@@ -472,11 +526,22 @@
       });
 
       function loadHat(hatPath) {
+        console.log('Loading hat:', hatPath);
+        
         fabric.Image.fromURL(hatPath, function (img) {
+          if (!img) {
+            console.error('Failed to load hat image:', hatPath);
+            alert('Failed to load hat image. Please try again.');
+            return;
+          }
+          
+          console.log('Hat loaded successfully:', hatPath);
+          
           // Remove previous hat
           if (hatImage) {
             canvas.remove(hatImage);
           }
+          
           // Configure hat
           img.set({
             left: canvas.getWidth() / 2 - 50,
@@ -488,12 +553,16 @@
             borderColor: '#667eea',
             borderScaleFactor: 2
           });
+          
           // Scale hat to reasonable size
           img.scale(0.3);
           hatImage = img;
           canvas.add(hatImage);
           canvas.setActiveObject(hatImage);
           canvas.renderAll();
+          
+          console.log('Hat added to canvas successfully');
+          
           // Add touch support for mobile
           addTouchSupport(hatImage);
         }, {
