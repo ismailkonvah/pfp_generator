@@ -2,20 +2,27 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, shrink-to-fit=no">
   <title>Bapper Hat Generator</title>
   <style>
+    /* Mobile-first CSS - starts with mobile styles */
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    html {
+      font-size: 16px;
+      -webkit-text-size-adjust: 100%;
+      -ms-text-size-adjust: 100%;
+    }
+
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       min-height: 100vh;
-      padding: 5px;
+      padding: 8px;
       -webkit-touch-callout: none;
       -webkit-user-select: none;
       -khtml-user-select: none;
@@ -23,50 +30,52 @@
       -ms-user-select: none;
       user-select: none;
       -webkit-tap-highlight-color: transparent;
+      overflow-x: hidden;
     }
 
     .container {
-      max-width: 1200px;
+      max-width: 100%;
       margin: 0 auto;
       background: white;
-      border-radius: 15px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.1);
       overflow: hidden;
     }
 
     .header {
       background: linear-gradient(135deg, #ff6b6b, #feca57);
-      padding: 15px;
+      padding: 16px;
       text-align: center;
       color: white;
     }
 
     .header h1 {
-      font-size: 1.5rem;
-      margin-bottom: 5px;
+      font-size: 1.25rem;
+      margin-bottom: 4px;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      font-weight: 700;
     }
 
     .header p {
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       opacity: 0.9;
     }
 
+    /* Mobile-first main content - single column by default */
     .main-content {
-      display: block;
-      padding: 15px;
+      padding: 12px;
     }
 
     .controls-panel {
       background: #f8f9fa;
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+      border-radius: 8px;
+      padding: 12px;
+      margin-bottom: 12px;
     }
 
     .feature-section {
-      margin-bottom: 20px;
-      padding-bottom: 15px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
       border-bottom: 1px solid #e9ecef;
     }
 
@@ -76,37 +85,37 @@
     }
 
     .feature-title {
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 600;
       color: #2c3e50;
-      margin-bottom: 10px;
+      margin-bottom: 8px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
     .feature-icon {
-      width: 20px;
-      height: 20px;
+      width: 18px;
+      height: 18px;
       background: #667eea;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       color: white;
-      font-size: 12px;
+      font-size: 11px;
       flex-shrink: 0;
     }
 
     .upload-area {
       border: 2px dashed #667eea;
-      border-radius: 8px;
-      padding: 20px;
+      border-radius: 6px;
+      padding: 16px;
       text-align: center;
       background: #f8f9ff;
-      transition: all 0.3s ease;
+      transition: all 0.2s ease;
       cursor: pointer;
-      min-height: 80px;
+      min-height: 70px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -117,6 +126,7 @@
     .upload-area:active {
       background: #e6f3ff;
       border-color: #4c51bf;
+      transform: scale(0.98);
     }
 
     .upload-input {
@@ -126,31 +136,42 @@
     .upload-text {
       color: #667eea;
       font-weight: 500;
-      margin-bottom: 5px;
-      font-size: 0.9rem;
+      margin-bottom: 4px;
+      font-size: 0.8rem;
     }
 
     .upload-hint {
       color: #718096;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
 
+    .image-info {
+      background: #e6f3ff;
+      border-radius: 4px;
+      padding: 6px;
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: #4a5568;
+      display: none;
+    }
+
+    /* Mobile-first hat grid - 2 columns by default */
     .hat-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 8px;
-      margin-top: 10px;
+      gap: 6px;
+      margin-top: 8px;
     }
 
     .hat-option {
       border: 2px solid transparent;
-      border-radius: 8px;
-      padding: 8px;
+      border-radius: 6px;
+      padding: 6px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
       background: white;
       text-align: center;
-      min-height: 70px;
+      min-height: 60px;
       display: flex;
       flex-direction: column;
       justify-content: center;
@@ -167,35 +188,35 @@
     .hat-option.selected {
       border-color: #667eea;
       background: #f0f4ff;
-      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+      box-shadow: 0 2px 6px rgba(102, 126, 234, 0.3);
     }
 
     .hat-preview {
-      width: 35px;
-      height: 35px;
+      width: 28px;
+      height: 28px;
       object-fit: cover;
-      border-radius: 6px;
-      margin-bottom: 4px;
+      border-radius: 4px;
+      margin-bottom: 3px;
     }
 
     .hat-name {
-      font-size: 0.7rem;
+      font-size: 0.65rem;
       color: #4a5568;
       font-weight: 500;
-      line-height: 1.2;
+      line-height: 1.1;
     }
 
     .controls-info {
       background: #e6fffa;
-      border-radius: 8px;
-      padding: 12px;
-      margin-top: 10px;
+      border-radius: 6px;
+      padding: 8px;
+      margin-top: 8px;
     }
 
     .controls-info h4 {
       color: #2d3748;
-      margin-bottom: 8px;
-      font-size: 0.9rem;
+      margin-bottom: 6px;
+      font-size: 0.8rem;
     }
 
     .controls-info ul {
@@ -204,10 +225,10 @@
     }
 
     .controls-info li {
-      margin-bottom: 3px;
-      padding-left: 15px;
+      margin-bottom: 2px;
+      padding-left: 12px;
       position: relative;
-      font-size: 0.8rem;
+      font-size: 0.7rem;
     }
 
     .controls-info li:before {
@@ -220,23 +241,23 @@
 
     .canvas-area {
       background: #f8f9fa;
-      border-radius: 10px;
-      padding: 15px;
+      border-radius: 8px;
+      padding: 12px;
       text-align: center;
     }
 
     .canvas-container {
       background: white;
-      border-radius: 8px;
-      padding: 10px;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-      margin-bottom: 15px;
+      border-radius: 6px;
+      padding: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      margin-bottom: 12px;
       overflow: hidden;
     }
 
     #canvas {
       border: 1px solid #e2e8f0;
-      border-radius: 6px;
+      border-radius: 4px;
       width: 100%;
       max-width: 100%;
       height: auto;
@@ -248,15 +269,14 @@
       background: linear-gradient(135deg, #667eea, #764ba2);
       color: white;
       border: none;
-      padding: 12px 20px;
-      border-radius: 25px;
-      font-size: 0.9rem;
+      padding: 12px 16px;
+      border-radius: 20px;
+      font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 3px 10px rgba(102, 126, 234, 0.4);
+      transition: all 0.15s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
       width: 100%;
-      max-width: 280px;
       min-height: 44px;
       touch-action: manipulation;
       -webkit-tap-highlight-color: transparent;
@@ -264,7 +284,7 @@
 
     .download-btn:active {
       transform: scale(0.98);
-      box-shadow: 0 2px 5px rgba(102, 126, 234, 0.6);
+      box-shadow: 0 1px 4px rgba(102, 126, 234, 0.6);
     }
 
     .download-btn:disabled {
@@ -273,194 +293,137 @@
       transform: none;
     }
 
-    /* Ultra Mobile Specific Styles */
-    @media screen and (max-width: 480px) {
+    .quality-info {
+      background: #f0f9ff;
+      border-radius: 4px;
+      padding: 6px;
+      margin-top: 6px;
+      font-size: 0.7rem;
+      color: #1e40af;
+      display: none;
+    }
+
+    /* Tablet styles (min-width: 481px) */
+    @media screen and (min-width: 481px) {
       body {
-        padding: 3px;
+        padding: 12px;
       }
 
       .container {
-        border-radius: 10px;
+        border-radius: 16px;
       }
 
       .header {
-        padding: 12px;
+        padding: 20px;
       }
 
       .header h1 {
-        font-size: 1.3rem;
+        font-size: 1.5rem;
+        margin-bottom: 6px;
       }
 
       .header p {
-        font-size: 0.8rem;
+        font-size: 0.9rem;
       }
 
       .main-content {
-        padding: 10px;
+        padding: 16px;
       }
 
       .controls-panel {
-        padding: 12px;
-        margin-bottom: 12px;
+        padding: 16px;
+        margin-bottom: 16px;
       }
 
       .feature-section {
-        margin-bottom: 15px;
-        padding-bottom: 12px;
+        margin-bottom: 20px;
+        padding-bottom: 16px;
       }
 
       .feature-title {
+        font-size: 1rem;
+        margin-bottom: 10px;
+      }
+
+      .feature-icon {
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+      }
+
+      .upload-area {
+        padding: 20px;
+        min-height: 80px;
+      }
+
+      .upload-text {
+        font-size: 0.9rem;
+        margin-bottom: 5px;
+      }
+
+      .upload-hint {
+        font-size: 0.8rem;
+      }
+
+      .hat-grid {
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .hat-option {
+        padding: 8px;
+        min-height: 70px;
+      }
+
+      .hat-preview {
+        width: 35px;
+        height: 35px;
+        margin-bottom: 4px;
+      }
+
+      .hat-name {
+        font-size: 0.7rem;
+      }
+
+      .controls-info {
+        padding: 12px;
+        margin-top: 10px;
+      }
+
+      .controls-info h4 {
         font-size: 0.9rem;
         margin-bottom: 8px;
       }
 
-      .feature-icon {
-        width: 18px;
-        height: 18px;
-        font-size: 11px;
-      }
-
-      .upload-area {
-        padding: 15px;
-        min-height: 70px;
-      }
-
-      .upload-text {
-        font-size: 0.8rem;
-      }
-
-      .upload-hint {
-        font-size: 0.7rem;
-      }
-
-      .hat-grid {
-        gap: 6px;
-      }
-
-      .hat-option {
-        padding: 6px;
-        min-height: 60px;
-      }
-
-      .hat-preview {
-        width: 30px;
-        height: 30px;
-      }
-
-      .hat-name {
-        font-size: 0.65rem;
-      }
-
-      .controls-info {
-        padding: 10px;
-      }
-
-      .controls-info h4 {
-        font-size: 0.8rem;
-        margin-bottom: 6px;
-      }
-
       .controls-info li {
-        font-size: 0.7rem;
-        margin-bottom: 2px;
+        font-size: 0.8rem;
+        margin-bottom: 3px;
       }
 
       .canvas-area {
-        padding: 10px;
+        padding: 16px;
       }
 
       .canvas-container {
-        padding: 8px;
+        padding: 12px;
+        margin-bottom: 16px;
       }
 
       .download-btn {
-        padding: 10px 16px;
-        font-size: 0.8rem;
-        max-width: 100%;
+        padding: 14px 20px;
+        font-size: 0.9rem;
+        max-width: 300px;
       }
     }
 
-    /* Extra Small Mobile Devices */
-    @media screen and (max-width: 360px) {
-      .header h1 {
-        font-size: 1.2rem;
-      }
-
-      .header p {
-        font-size: 0.75rem;
-      }
-
-      .main-content {
-        padding: 8px;
-      }
-
-      .controls-panel {
-        padding: 10px;
-      }
-
-      .feature-title {
-        font-size: 0.85rem;
-      }
-
-      .upload-area {
-        padding: 12px;
-        min-height: 60px;
-      }
-
-      .hat-option {
-        min-height: 55px;
-        padding: 4px;
-      }
-
-      .hat-preview {
-        width: 25px;
-        height: 25px;
-      }
-
-      .hat-name {
-        font-size: 0.6rem;
-      }
-    }
-
-    /* Landscape orientation on small screens */
-    @media screen and (max-height: 500px) and (orientation: landscape) {
-      .main-content {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
-      }
-
-      .controls-panel {
-        margin-bottom: 0;
-      }
-
-      .feature-section {
-        margin-bottom: 12px;
-        padding-bottom: 10px;
-      }
-
-      .hat-grid {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 4px;
-      }
-
-      .hat-option {
-        min-height: 50px;
-      }
-
-      .hat-preview {
-        width: 25px;
-        height: 25px;
-      }
-    }
-
-    /* Desktop styles (larger screens) */
+    /* Desktop styles (min-width: 769px) */
     @media screen and (min-width: 769px) {
       body {
         padding: 20px;
       }
 
       .container {
+        max-width: 1200px;
         border-radius: 20px;
       }
 
@@ -523,6 +486,7 @@
       .hat-grid {
         grid-template-columns: repeat(4, 1fr);
         gap: 15px;
+        margin-top: 15px;
       }
 
       .hat-option {
@@ -542,6 +506,7 @@
 
       .controls-info {
         padding: 20px;
+        margin-top: 15px;
       }
 
       .controls-info h4 {
@@ -560,6 +525,7 @@
 
       .canvas-container {
         padding: 20px;
+        margin-bottom: 20px;
       }
 
       .download-btn {
@@ -586,6 +552,38 @@
         background: #f8f9ff;
       }
     }
+
+    /* Landscape orientation adjustments for mobile */
+    @media screen and (max-width: 768px) and (orientation: landscape) {
+      .main-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
+      }
+
+      .controls-panel {
+        margin-bottom: 0;
+      }
+
+      .hat-grid {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 4px;
+      }
+
+      .hat-option {
+        min-height: 50px;
+        padding: 4px;
+      }
+
+      .hat-preview {
+        width: 24px;
+        height: 24px;
+      }
+
+      .hat-name {
+        font-size: 0.6rem;
+      }
+    }
   </style>
 </head>
 <body>
@@ -594,7 +592,15 @@
       <h1> ₿appers PFP Generator</h1>
       <p>Create amazing pfp combinations with your photos!</p>
     </div>
-
+    <p style="text-align: center; font-size: 14px; color: #667eea; margin-top: 20px;">
+  Made by 
+  <a href="https://x.com/boringcrypto_" target="_blank" style="color: #764ba2; font-weight: bold; text-decoration: none;">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" width="14" height="14" style="vertical-align: middle; margin-right: 4px;">
+      <path d="M93.6 14H110L72.7 56.1L117 106H81.7L54.7 75.2L24.7 106H8L48.2 61.2L4 14H41.2L65.2 42.2L93.6 14ZM86.2 96H97.2L36.2 24H24.2L86.2 96Z" fill="currentColor"/>
+    </svg>
+    @boringcrypto_
+  </a>
+</p>
     <div class="main-content">
       <div class="controls-panel">
         <!-- Feature 1: Upload Image -->
@@ -608,6 +614,7 @@
             <div class="upload-text">📸 Click to upload your image</div>
             <div class="upload-hint">or drag and drop here</div>
           </div>
+          <div class="image-info" id="imageInfo"></div>
         </div>
 
         <!-- Feature 2: Choose Hat -->
@@ -672,7 +679,7 @@
 
       <div class="canvas-area">
         <div class="canvas-container">
-          <canvas id="canvas" width="300" height="225"></canvas>
+          <canvas id="canvas" width="280" height="210"></canvas>
         </div>
         
         <!-- Feature 4: Download -->
@@ -684,6 +691,7 @@
           <button class="download-btn" onclick="downloadImage()" id="downloadBtn" disabled aria-label="Download your creation">
             📥 Download Your Creation
           </button>
+          <div class="quality-info" id="qualityInfo"></div>
         </div>
       </div>
     </div>
@@ -736,34 +744,75 @@
       console.log('Canvas initialized successfully');
       let hatImage = null;
       let backgroundImage = null;
+      let originalImageData = null; // Store original image data for high-quality export
+      let originalImageDimensions = { width: 0, height: 0 };
+      let uploadedImageAspectRatio = null; // Store the aspect ratio of the uploaded image
 
-      // Ultra-responsive canvas sizing
+      // Adaptive canvas sizing based on uploaded image aspect ratio
       function resizeCanvas() {
         const container = document.querySelector('.canvas-container');
-        const containerWidth = container.clientWidth - 20; // Account for padding
+        const containerWidth = container.clientWidth - 16; // Account for padding
+        
+        let maxWidth, maxHeight;
+        
+        // Device-appropriate maximum sizes
+        if (window.innerWidth < 481) {
+          // Mobile: smaller maximum size
+          maxWidth = Math.min(containerWidth, 300);
+          maxHeight = 400; // Allow taller images on mobile
+        } else if (window.innerWidth < 769) {
+          // Tablet: medium maximum size
+          maxWidth = Math.min(containerWidth, 450);
+          maxHeight = 500;
+        } else {
+          // Desktop: larger maximum size
+          maxWidth = Math.min(containerWidth, 600);
+          maxHeight = 600;
+        }
         
         let newWidth, newHeight;
         
-        if (window.innerWidth <= 480) {
-          // Ultra mobile: smaller canvas
-          newWidth = Math.min(containerWidth, 280);
-          newHeight = newWidth * 0.75; // 4:3 aspect ratio
-        } else if (window.innerWidth <= 768) {
-          // Tablet: medium canvas
-          newWidth = Math.min(containerWidth, 400);
-          newHeight = newWidth * 0.75;
+        if (uploadedImageAspectRatio && backgroundImage) {
+          // Use the uploaded image's aspect ratio
+          if (uploadedImageAspectRatio >= 1) {
+            // Landscape or square image
+            newWidth = maxWidth;
+            newHeight = newWidth / uploadedImageAspectRatio;
+            
+            // If height exceeds max, constrain by height
+            if (newHeight > maxHeight) {
+              newHeight = maxHeight;
+              newWidth = newHeight * uploadedImageAspectRatio;
+            }
+          } else {
+            // Portrait image
+            newHeight = maxHeight;
+            newWidth = newHeight * uploadedImageAspectRatio;
+            
+            // If width exceeds max, constrain by width
+            if (newWidth > maxWidth) {
+              newWidth = maxWidth;
+              newHeight = newWidth / uploadedImageAspectRatio;
+            }
+          }
         } else {
-          // Desktop: full size
-          newWidth = Math.min(containerWidth, 600);
+          // Default 4:3 aspect ratio when no image is uploaded
+          newWidth = maxWidth;
           newHeight = newWidth * 0.75;
         }
+        
+        // Ensure minimum size
+        newWidth = Math.max(newWidth, 200);
+        newHeight = Math.max(newHeight, 150);
+        
+        console.log('Resizing canvas to:', newWidth, 'x', newHeight, 'Aspect ratio:', uploadedImageAspectRatio);
         
         canvas.setDimensions({
           width: newWidth,
           height: newHeight
         });
         
-        // Rescale existing objects
+        // Rescale existing background image to fit new canvas
         if (backgroundImage) {
           const scale = Math.min(newWidth / backgroundImage.width, newHeight / backgroundImage.height);
           backgroundImage.scale(scale);
@@ -773,12 +822,26 @@
           });
         }
         
-        if (hatImage) {
-          // Keep hat proportional to canvas size
-          const hatScale = Math.min(newWidth / 600, newHeight / 450) * 0.3;
+        // Rescale and reposition hat relative to the background image
+        if (hatImage && backgroundImage) {
+          const bgScaledWidth = backgroundImage.getScaledWidth();
+          const bgScaledHeight = backgroundImage.getScaledHeight();
+          
+          // Scale hat proportionally to the background image size
+          const hatScale = Math.min(bgScaledWidth / 400, bgScaledHeight / 400) * 0.25;
+          
           hatImage.set({
             scaleX: hatScale,
             scaleY: hatScale
+          });
+          
+          // Reposition hat relative to background image center
+          const bgCenterX = backgroundImage.left + bgScaledWidth / 2;
+          const bgCenterY = backgroundImage.top + bgScaledHeight / 2;
+          
+          hatImage.set({
+            left: bgCenterX - (hatImage.width * hatScale) / 2,
+            top: bgCenterY - bgScaledHeight * 0.35 // Position hat in upper portion of image
           });
         }
         
@@ -787,11 +850,15 @@
       
       // Initial resize and window resize listener
       resizeCanvas();
+      
+      let resizeTimeout;
       window.addEventListener('resize', function() {
-        setTimeout(resizeCanvas, 100);
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(resizeCanvas, 100);
       });
+      
       window.addEventListener('orientationchange', function() {
-        setTimeout(resizeCanvas, 200);
+        setTimeout(resizeCanvas, 300);
       });
 
       // Upload user image with drag and drop
@@ -850,6 +917,28 @@
         reader.onload = function (f) {
           const testImg = new Image();
           testImg.onload = function() {
+            console.log('Original image dimensions:', testImg.width, 'x', testImg.height);
+            
+            // Store original image data and dimensions for high-quality export
+            originalImageData = f.target.result;
+            originalImageDimensions = { width: testImg.width, height: testImg.height };
+            
+            // Calculate and store the aspect ratio
+            uploadedImageAspectRatio = testImg.width / testImg.height;
+            console.log('Image aspect ratio:', uploadedImageAspectRatio);
+            
+            // Update image info display
+            const imageInfo = document.getElementById('imageInfo');
+            const aspectRatioText = uploadedImageAspectRatio > 1 ? 'Landscape' : 
+                                   uploadedImageAspectRatio < 1 ? 'Portrait' : 'Square';
+            imageInfo.textContent = `${testImg.width}×${testImg.height}px (${aspectRatioText})`;
+            imageInfo.style.display = 'block';
+            
+            // Update quality info
+            const qualityInfo = document.getElementById('qualityInfo');
+            qualityInfo.textContent = `Canvas will adapt to image ratio. Download: ${testImg.width}×${testImg.height}px`;
+            qualityInfo.style.display = 'block';
+            
             fabric.Image.fromURL(f.target.result, function (img) {
               if (!img) {
                 alert('Failed to create fabric image. Please try a different image.');
@@ -860,7 +949,13 @@
               canvas.clear();
               canvas.backgroundColor = '#f8f9fa';
               
-              // Scale image to fit canvas
+              // Store the background image reference
+              backgroundImage = img;
+              
+              // Resize canvas to match image aspect ratio
+              resizeCanvas();
+              
+              // Scale image to fit the new canvas dimensions
               const canvasWidth = canvas.getWidth();
               const canvasHeight = canvas.getHeight();
               const scale = Math.min(canvasWidth / img.width, canvasHeight / img.height);
@@ -875,7 +970,6 @@
                 evented: false
               });
               
-              backgroundImage = img;
               canvas.add(img);
               canvas.sendToBack(img);
               canvas.renderAll();
@@ -887,7 +981,7 @@
               const uploadText = uploadArea.querySelector('.upload-text');
               const uploadHint = uploadArea.querySelector('.upload-hint');
               if (uploadText) uploadText.textContent = '✅ Image uploaded successfully!';
-              if (uploadHint) uploadHint.textContent = 'Click to upload a different image';
+              if (uploadHint) uploadHint.textContent = 'Canvas adapted to image ratio';
               
             }, {
               crossOrigin: 'anonymous'
@@ -947,34 +1041,51 @@
             canvas.remove(hatImage);
           }
           
-          // Configure hat with ultra-mobile support
+          // Configure hat with adaptive sizing based on background image
           const canvasWidth = canvas.getWidth();
           const canvasHeight = canvas.getHeight();
           
-          // Scale hat appropriately for canvas size
           let hatScale;
-          if (window.innerWidth <= 480) {
-            hatScale = Math.min(canvasWidth / 300, canvasHeight / 225) * 0.4; // Larger on small screens
+          if (backgroundImage) {
+            // Scale hat relative to the background image size
+            const bgScaledWidth = backgroundImage.getScaledWidth();
+            const bgScaledHeight = backgroundImage.getScaledHeight();
+            hatScale = Math.min(bgScaledWidth / 400, bgScaledHeight / 400) * 0.25;
           } else {
-            hatScale = Math.min(canvasWidth / 600, canvasHeight / 450) * 0.3;
+            // Fallback scaling when no background image
+            hatScale = Math.min(canvasWidth / 400, canvasHeight / 400) * 0.3;
+          }
+          
+          // Position hat relative to background image if available
+          let hatLeft, hatTop;
+          if (backgroundImage) {
+            const bgCenterX = backgroundImage.left + backgroundImage.getScaledWidth() / 2;
+            const bgCenterY = backgroundImage.top + backgroundImage.getScaledHeight() / 2;
+            
+            hatLeft = bgCenterX - (img.width * hatScale) / 2;
+            hatTop = bgCenterY - backgroundImage.getScaledHeight() * 0.35; // Upper portion of image
+          } else {
+            // Fallback positioning
+            hatLeft = canvasWidth / 2 - (img.width * hatScale) / 2;
+            hatTop = canvasHeight * 0.15;
           }
           
           img.set({
-            left: canvasWidth / 2 - (img.width * hatScale) / 2,
-            top: canvasHeight * 0.15,
+            left: hatLeft,
+            top: hatTop,
             hasRotatingPoint: true,
             cornerColor: '#667eea',
-            cornerSize: window.innerWidth <= 480 ? 20 : (window.innerWidth <= 768 ? 16 : 12),
+            cornerSize: window.innerWidth < 481 ? 20 : (window.innerWidth < 769 ? 16 : 12),
             transparentCorners: false,
             borderColor: '#667eea',
-            borderScaleFactor: window.innerWidth <= 480 ? 3 : 2,
+            borderScaleFactor: window.innerWidth < 481 ? 3 : 2,
             scaleX: hatScale,
             scaleY: hatScale,
-            minScaleLimit: 0.1,
-            maxScaleLimit: 3,
+            minScaleLimit: 0.05,
+            maxScaleLimit: 2,
             // Enhanced touch support
-            touchCornerSize: window.innerWidth <= 480 ? 30 : (window.innerWidth <= 768 ? 24 : 16),
-            selectionLineWidth: window.innerWidth <= 480 ? 4 : (window.innerWidth <= 768 ? 3 : 2)
+            touchCornerSize: window.innerWidth < 481 ? 30 : (window.innerWidth < 769 ? 24 : 16),
+            selectionLineWidth: window.innerWidth < 481 ? 4 : (window.innerWidth < 769 ? 3 : 2)
           });
           
           hatImage = img;
@@ -982,15 +1093,15 @@
           canvas.setActiveObject(img);
           canvas.renderAll();
           
-          console.log('Hat added to canvas successfully');
+          console.log('Hat added to canvas successfully with adaptive scaling');
         }, {
           crossOrigin: 'anonymous'
         });
       }
 
-      // Enhanced download function
+      // Enhanced download function with high-quality export
       window.downloadImage = function() {
-        if (!backgroundImage) {
+        if (!backgroundImage || !originalImageData) {
           alert('Please upload an image first!');
           return;
         }
@@ -1000,20 +1111,144 @@
           canvas.discardActiveObject();
           canvas.renderAll();
           
-          // Create download link
+          // Create a high-resolution canvas for export
+          const exportCanvas = document.createElement('canvas');
+          const exportCtx = exportCanvas.getContext('2d');
+          
+          // Use original image dimensions for export
+          const exportWidth = originalImageDimensions.width;
+          const exportHeight = originalImageDimensions.height;
+          
+          exportCanvas.width = exportWidth;
+          exportCanvas.height = exportHeight;
+          
+          console.log('Export canvas dimensions:', exportWidth, 'x', exportHeight);
+          
+          // Load and draw the original background image at full resolution
+          const originalImg = new Image();
+          originalImg.onload = function() {
+            // Draw background image at full resolution
+            exportCtx.drawImage(originalImg, 0, 0, exportWidth, exportHeight);
+            
+            // If there's a hat, draw it proportionally
+            if (hatImage) {
+              // Calculate hat position and scale relative to original image
+              const canvasWidth = canvas.getWidth();
+              const canvasHeight = canvas.getHeight();
+              
+              // Get hat's current position and scale on the display canvas
+              const hatLeft = hatImage.left;
+              const hatTop = hatImage.top;
+              const hatScaleX = hatImage.scaleX;
+              const hatScaleY = hatImage.scaleY;
+              const hatAngle = hatImage.angle;
+              
+              // Calculate proportional position and scale for export
+              const scaleFactorX = exportWidth / canvasWidth;
+              const scaleFactorY = exportHeight / canvasHeight;
+              
+              const exportHatLeft = hatLeft * scaleFactorX;
+              const exportHatTop = hatTop * scaleFactorY;
+              const exportHatScaleX = hatScaleX * scaleFactorX;
+              const exportHatScaleY = hatScaleY * scaleFactorY;
+              
+              // Load hat image for export
+              const hatImg = new Image();
+              hatImg.onload = function() {
+                // Save context state
+                exportCtx.save();
+                
+                // Move to hat center for rotation
+                const hatCenterX = exportHatLeft + (hatImg.width * exportHatScaleX) / 2;
+                const hatCenterY = exportHatTop + (hatImg.height * exportHatScaleY) / 2;
+                
+                exportCtx.translate(hatCenterX, hatCenterY);
+                exportCtx.rotate((hatAngle * Math.PI) / 180);
+                
+                // Draw hat at high resolution
+                exportCtx.drawImage(
+                  hatImg,
+                  -(hatImg.width * exportHatScaleX) / 2,
+                  -(hatImg.height * exportHatScaleY) / 2,
+                  hatImg.width * exportHatScaleX,
+                  hatImg.height * exportHatScaleY
+                );
+                
+                // Restore context state
+                exportCtx.restore();
+                
+                // Create download link with high-quality image
+                const link = document.createElement('a');
+                link.download = 'bapper-pfp-adaptive-' + Date.now() + '.png';
+                link.href = exportCanvas.toDataURL('image/png', 1.0);
+                
+                // Trigger download
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('High-quality adaptive image downloaded successfully');
+              };
+              
+              hatImg.onerror = function() {
+                console.error('Failed to load hat image for export');
+                // Fallback to regular canvas export
+                fallbackDownload();
+              };
+              
+              // Get the hat image source
+              const selectedHat = document.querySelector('.hat-option.selected');
+              if (selectedHat) {
+                hatImg.src = selectedHat.dataset.hat;
+              } else {
+                // No hat selected, just download background
+                const link = document.createElement('a');
+                link.download = 'bapper-pfp-adaptive-' + Date.now() + '.png';
+                link.href = exportCanvas.toDataURL('image/png', 1.0);
+                
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                console.log('High-quality background image downloaded successfully');
+              }
+            } else {
+              // No hat, just download the high-resolution background
+              const link = document.createElement('a');
+              link.download = 'bapper-pfp-adaptive-' + Date.now() + '.png';
+              link.href = exportCanvas.toDataURL('image/png', 1.0);
+              
+              document.body.appendChild(link);
+              link.click();
+              document.body.removeChild(link);
+              
+              console.log('High-quality background image downloaded successfully');
+            }
+          };
+          
+          originalImg.onerror = function() {
+            console.error('Failed to load original image for export');
+            fallbackDownload();
+          };
+          
+          originalImg.src = originalImageData;
+          
+        } catch (error) {
+          console.error('High-quality download failed:', error);
+          fallbackDownload();
+        }
+        
+        function fallbackDownload() {
+          // Fallback to regular canvas export
           const link = document.createElement('a');
-          link.download = 'bapper-pfp-' + Date.now() + '.png';
+          link.download = 'bapper-pfp-adaptive-' + Date.now() + '.png';
           link.href = canvas.toDataURL('image/png', 1.0);
           
-          // Trigger download
           document.body.appendChild(link);
           link.click();
           document.body.removeChild(link);
           
-          console.log('Image downloaded successfully');
-        } catch (error) {
-          console.error('Download failed:', error);
-          alert('Failed to download image. Please try again.');
+          console.log('Fallback image downloaded');
         }
       };
 
@@ -1057,7 +1292,7 @@
         canvas.renderAll();
       });
 
-      console.log('Ultra Mobile Bapper Hat Generator initialized successfully');
+      console.log('Adaptive Aspect Ratio Bapper Hat Generator initialized successfully');
     });
   </script>
 </body>
